@@ -37,3 +37,16 @@ def post_busroute(request):
       data = {"busroute": BusrouteModelSerializer(response).data}
 
       return Response(data)
+
+@api_view(["PUT"])
+def finish_route(request):
+      route = Busroute.objects.get(id = request.data["route"])
+      route.is_finished = True
+      route.finish = request.data["finish"]
+      route.save()
+
+      data = {"busroute": BusrouteModelSerializer(route).data}
+
+      return Response(data)
+
+

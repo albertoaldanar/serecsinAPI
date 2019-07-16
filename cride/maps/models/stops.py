@@ -16,7 +16,7 @@ class Stop(SerecsinModel):
   )
 
   client = models.CharField(max_length = 30, unique = False, null = True)
-  comments = models.CharField(max_length = 10, unique = False)
+  comments = models.CharField(max_length = 40, null = True)
   km = models.PositiveIntegerField(default = 0)
 
   arrived_at = models.DateTimeField(
