@@ -5,14 +5,16 @@ from rest_framework import serializers
 from cride.maps.models import Busroute
 #Django
 from django.db import models
+from cride.users.serializers import UserModelSerializer
 
 #Serializer
 class BusrouteModelSerializer(serializers.ModelSerializer):
 
   class Meta:
-    """Meta class"""
+    company = UserModelSerializer(read_only = True)
+
     model = Busroute
     fields= (
-      "id", "bus", "helper", "helper_b",
+      "company", "id", "bus", "helper", "helper_b",
       "km", "gas", "start", "finish"
     )

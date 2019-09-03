@@ -4,10 +4,13 @@ from rest_framework import generics
 from rest_framework import status, mixins, viewsets
 from rest_framework.decorators import api_view
 from rest_framework.decorators import action
+
 #Serializers
 from cride.maps.serializers import BusrouteModelSerializer
 #models
 from cride.maps.models import Busroute
+from cride.users.models import User
+from django.shortcuts import render
 
 class BusroutesViewSet(mixins.CreateModelMixin,
                     mixins.ListModelMixin,
@@ -24,7 +27,11 @@ class BusroutesViewSet(mixins.CreateModelMixin,
 
 @api_view(["POST"])
 def post_busroute(request):
+      currentUser = request.data["user"]
+      user = User.objects.get(username= currentUser)
+
       response = Busroute.objects.create(
+        company = user,
         bus = request.data["bus"],
         helper = request.data["helper"],
         helper_b = request.data["helper_b"],

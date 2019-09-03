@@ -15,10 +15,9 @@ class User(SerecsinModel, AbstractUser):
     }
   )
 
-  phone_number = models.CharField(max_length = 17, blank = True)
+  phone_number = models.CharField(max_length = 17, blank = True, null= True)
 
-  USERNAME_FIELD = "email"
-  REQUIRED_FIELDS = ["username", "first_name", "last_name"]
+  USERNAME_FIELD = "username"
 
   def __str__(self):
     return self.username

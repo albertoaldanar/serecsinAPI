@@ -16,6 +16,6 @@ class StopModelSerializer(serializers.ModelSerializer):
     """Meta class"""
     model = Stop
     fields= (
-      "id", "lat", "lng", "client",
+      "id", "lat", "lng", "client", "contact", "phone", "email",
       "comments", "busroute", "arrived_at", "finished_at"
     )

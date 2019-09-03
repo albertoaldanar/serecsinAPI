@@ -28,15 +28,15 @@ class UserViewSet(mixins.RetrieveModelMixin,
   serializer_class = UserModelSerializer
   lookup_field = "username"
 
-  # def get_permissions(self):
-  #   """Asign Permission based on action"""
-  #   if self.action in ["signup", "login", "verify"]:
-  #       permissions = [AllowAny]
-  #   elif self.action == ["retrieve", "update", "partial_update"]:
-  #       permissions = [IsAuthenticated, IsAccountOwner]
-  #   else:
-  #       permissions = [IsAuthenticated]
-  #   return [p() for p in permissions]
+  def get_permissions(self):
+    """Asign Permission based on action"""
+    if self.action in ["signup", "login", "verify"]:
+        permissions = [AllowAny]
+    elif self.action == ["retrieve", "update", "partial_update"]:
+        permissions = [IsAuthenticated, IsAccountOwner]
+    else:
+        permissions = [IsAuthenticated]
+    return [p() for p in permissions]
 
   @action(detail=False, methods=['post'])
   def login(self, request):
@@ -46,7 +46,7 @@ class UserViewSet(mixins.RetrieveModelMixin,
 
       data = {
         "user": UserModelSerializer(user).data,
-        "acces_token": token
+        "jwt": token
       }
       return Response(data, status = status.HTTP_201_CREATED)
 
@@ -55,8 +55,11 @@ class UserViewSet(mixins.RetrieveModelMixin,
   def signup(self, request):
       serealizer = UserSignUpSerializer(data = request.data)
       serealizer.is_valid(raise_exception =True)
-      user = serealizer.save()
-      data = UserModelSerializer(user).data
+      user, jwt = serealizer.save()
+      data = {
+        "user": UserModelSerializer(user).data,
+        "jwt": jwt
+      }
 
       return Response(data, status = status.HTTP_201_CREATED)
 

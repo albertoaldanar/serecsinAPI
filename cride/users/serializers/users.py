@@ -17,14 +17,15 @@ from datetime import timedelta
 import jwt
 
 from django.db import models
+#Serializer
 
 class UserModelSerializer(serializers.ModelSerializer):
-
 
   class Meta:
     model = User
     fields = (
       "username",
+      "email",
       "first_name",
       "last_name",
     )
@@ -39,17 +40,9 @@ class UserSignUpSerializer(serializers.Serializer):
     max_length = 20,
     validators = [UniqueValidator(queryset= User.objects.all())]
   )
-  phone_regex = RegexValidator(
-    regex = r'\+?1?\d{9,15}$',
-    message = "Phone number must be entered"
-  )
-
-  phone_number = serializers.CharField(validators= [phone_regex])
 
   password = serializers.CharField(min_length=  8, max_length = 64)
   password_confirmation = serializers.CharField(min_length=  8, max_length = 64)
-  first_name = serializers.CharField(min_length = 2, max_length = 30)
-  last_name = serializers.CharField(min_length = 2, max_length = 30)
 
   def validate(self, data):
     password = data["password"]
@@ -63,20 +56,23 @@ class UserSignUpSerializer(serializers.Serializer):
   def create(self, data):
     data.pop("password_confirmation")
     user = User.objects.create_user(**data)
-    self.send_confrimation_email(user)
-    return user
+    # self.send_confrimation_email(user)
+    self.gen_verification_token(user)
+    jwt, created = Token.objects.get_or_create(user = user)
+    return user, jwt.key
 
   def send_confrimation_email(self, user):
     verifcation_token = self.gen_verification_token(user)
     subject = "Welcome @{}! Verify your account".format(user.username)
     from_email = "Compare ride <noreply@comparteride.com"
     content = render_to_string(
-        "emails/users/account_verification.html",
+        "templates.account_verification.html",
         {"token": verifcation_token, "user": user}
     )
-    msg = EmailMultiAlternatives(subject,content,from_email, [user.email])
+    msg = EmailMultiAlternatives(subject,content, from_email, [user.email])
     msg.attach_alternative(content, "text/html")
     msg.send()
+
 
   def gen_verification_token(self, user):
     """Create JWT"""
@@ -92,15 +88,15 @@ class UserSignUpSerializer(serializers.Serializer):
 #Login user
 class UserLoginSerializer(serializers.Serializer):
   """Login data"""
-  email = serializers.EmailField()
+  username = serializers.CharField(
+    min_length = 6, max_length = 20,
+  )
   password = serializers.CharField(min_length =8, max_length =64)
 
   def validate(self, data):
-      user = authenticate(username = data["email"], password = data["password"])
+      user = authenticate(username = data["username"], password = data["password"])
       if not user:
           raise serializers.ValidationError("Invalid credential")
-      if not user.is_verified:
-          raise serializers.ValidationError("Account is not active yet")
       self.context["user"] = user
       return data
 
@@ -130,5 +126,4 @@ class AccountVerificationSerializer(serializers.Serializer):
         """Update users verified status"""
         payload = self.context["payload"]
         user = User.objects.get(username = payload["user"])
-        user.is_verified = True
         user.save()

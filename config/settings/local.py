@@ -2,7 +2,6 @@
 
 from .base import *  # NOQA
 from .base import env
-
 # Base
 DEBUG = True
 
@@ -13,7 +12,8 @@ ALLOWED_HOSTS = [
     "0.0.0.0",
     "127.0.0.1",
     "192.168.0.8",
-    "192.168.8.10"
+    "192.168.8.7",
+    "192.168.8.4"
 ]
 
 # Cache
@@ -33,7 +33,7 @@ EMAIL_HOST = 'localhost'
 EMAIL_PORT = 1025
 
 # django-extensions
-INSTALLED_APPS += ['django_extensions']  # noqa F405
+INSTALLED_APPS += ['django_extensions',]  # noqa F405
 
 # Celery
 CELERY_TASK_ALWAYS_EAGER = True

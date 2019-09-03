@@ -19,14 +19,25 @@ class StopsViewSet(mixins.CreateModelMixin,
   """Request view set"""
 
   serializer_class = StopModelSerializer
-  queryset = Stop.objects.all()
 
+  def get_queryset(self):
+        busroute = self.request.query_params.get("busroute")
+
+        queryset = Stop.objects.filter(
+          busroute__id = busroute,
+        )
+        return queryset
 
 @api_view(["POST"])
 def post_stop(request):
-      busroute = Busroute.objects.last()
+      value = request.data["busroute"]
+
+      busroute = Busroute.objects.get(id = value)
       response = Stop.objects.create(
         lng = request.data["lng"],
+        phone =request.data["phone"],
+        email = request.data["email"],
+        contact = request.data["contact"],
         busroute = busroute,
         lat = request.data["lat"],
         client = request.data["client"],

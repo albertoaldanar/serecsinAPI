@@ -10,9 +10,8 @@ env = environ.Env()
 # Base
 DEBUG = env.bool('DJANGO_DEBUG', False)
 
-# Language and timezone
+# Language and timezone TIME_ZONE = 'America/Mexico_City'LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'America/Mexico_City'
-LANGUAGE_CODE = 'en-us'
 SITE_ID = 1
 USE_I18N = True
 USE_L10N = True
@@ -46,11 +45,12 @@ DJANGO_APPS = [
 
 THIRD_PARTY_APPS = [
   "rest_framework",
-  "rest_framework.authtoken"
+  "rest_framework.authtoken",
 ]
 LOCAL_APPS = [
   "cride.users.apps.UsersAppConfig",
   "cride.maps.apps.MapsAppConfig",
+  "cride.registros.apps.RegistrosAppConfig",
 ]
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
@@ -159,15 +159,15 @@ CELERYD_TASK_TIME_LIMIT = 5 * 60
 CELERYD_TASK_SOFT_TIME_LIMIT = 60
 
 
-#Django. REST Framework
-# REST_FRAMEWORK = {
-#     'DEFAULT_RENDERER_CLASSES': (
-#         'rest_framework.renderers.JSONRenderer',
+# Django. REST Framework
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
 
-#     ),
-#     'DEFAULT_AUTHENTICATION_CLASSES': (
-#         'rest_framework.authentication.TokenAuthentication',
-#     ),
-#     'DEFAULT_PAGINATION_CLASS':'rest_framework.pagination.LimitOffsetPagination',
-#     'PAGE_SIZE': 3
-# }
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_PAGINATION_CLASS':'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 10
+}
