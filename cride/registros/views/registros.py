@@ -70,7 +70,6 @@ def serecsin_data(request):
 
 
 
-
   #Ingresos por grupo 
   bonatti = Ingreso.objects.filter(mes = current_month, año = current_year, cliente = "Bonatti")
   total_bonatti = bonatti.aggregate(Sum('importe'))
