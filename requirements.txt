@@ -23,7 +23,7 @@ odfpy==1.4.0
 openpyxl==2.5.1
 pyasn1==0.4.7
 pycparser==2.19
-Pygments==2.3.1
+Pygments==2.7.4
 python-dotenv==0.10.3
 pytz==2019.1
 PyYAML==5.1.1
