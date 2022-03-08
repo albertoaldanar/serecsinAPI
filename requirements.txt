@@ -11,7 +11,7 @@ djangorestframework==3.9.2
 enum34==1.1.6
 environs==4.2.0
 et-xmlfile==1.0.1
-httpie==1.0.2
+httpie==3.1.0
 idna==2.8
 ipaddress==1.0.22
 jdcal==1.4.1
